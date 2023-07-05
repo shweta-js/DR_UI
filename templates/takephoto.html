@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Webcam Capture</title>
+  <style>
+    #video-container {
+      position: relative;
+      width: 100%;
+      height: auto;
+    }
+
+    #video-preview {
+      width: 50%;
+      height: auto;
+    }
+
+    #canvas-preview {
+      display: none;
+    }
+
+    #controls {
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div id="video-container">
+    <video id="video-preview" autoplay></video>
+    <canvas id="canvas-preview"></canvas>
+  </div>
+
+  <div id="controls">
+    <button id="snap-button" onclick="captureImage()">Snap</button>
+    <button id="crop-button" onclick="toggleCropMode()" disabled>Crop</button>
+    <button id="download-button" onclick="downloadImage()" disabled>Download</button>
+    <button id="retake-button" onclick="retakeImage()" disabled>Retake</button>
+  </div>
+
+  <script>
+    var videoStream;
+    var videoPreview = document.getElementById('video-preview');
+    var canvasPreview = document.getElementById('canvas-preview');
+    var snapButton = document.getElementById('snap-button');
+    var cropButton = document.getElementById('crop-button');
+    var downloadButton = document.getElementById('download-button');
+    var retakeButton = document.getElementById('retake-button');
+    var cropMode = false;
+    var cropData = {};
+
+    function startCamera() {
+      navigator.mediaDevices.getUserMedia({ video: true })
+        .then(function(stream) {
+          videoStream = stream;
+          videoPreview.srcObject = stream;
+        })
+        .catch(function(error) {
+          console.error('Error accessing webcam:', error);
+        });
+    }
+
+    function stopCamera() {
+      if (videoStream) {
+        videoStream.getTracks().forEach(function(track) {
+          track.stop();
+        });
+      }
+    }
+
+    function captureImage() {
+      // Hide the video preview and show the canvas preview
+      videoPreview.style.display = 'none';
+      canvasPreview.style.display = 'block';
+
+      // Draw the current video frame onto the canvas
+      var context = canvasPreview.getContext('2d');
+      canvasPreview.width = videoPreview.videoWidth;
+      canvasPreview.height = videoPreview.videoHeight;
+      context.drawImage(videoPreview, 0, 0, canvasPreview.width, canvasPreview.height);
+
+      // Enable the crop button and disable the snap button
+      cropButton.disabled = false;
+      snapButton.disabled = true;
+    }
+
+    function toggleCropMode() {
+  cropMode = !cropMode;
+  if (cropMode) {
+    // Enable crop mode
+    cropButton.textContent = 'Finish Crop';
+    canvasPreview.addEventListener('mousedown', startCrop);
+    canvasPreview.addEventListener('mousemove', updateCrop);
+    canvasPreview.addEventListener('mouseup', endCrop);
+  } else {
+    // Disable crop mode
+    cropButton.textContent = 'Crop';
+    canvasPreview.removeEventListener('mousedown', startCrop);
+    canvasPreview.removeEventListener('mousemove', updateCrop);
+    canvasPreview.removeEventListener('mouseup', endCrop);
+    drawCropRectangle();
+
+    // Enable the download and retake buttons
+    downloadButton.disabled = false;
+    retakeButton.disabled = false;
+  }
+}
+
+
+    function startCrop(event) {
+      cropData.startX = event.offsetX;
+      cropData.startY = event.offsetY;
+      cropData.cropping = true;
+    }
+
+    function updateCrop(event) {
+      if (cropData.cropping) {
+        cropData.currentX = event.offsetX;
+        cropData.currentY = event.offsetY;
+        drawCropRectangle();
+      }
+    }
+
+    function endCrop(event) {
+      cropData.currentX = event.offsetX;
+      cropData.currentY = event.offsetY;
+      cropData.cropping = false;
+      drawCropRectangle();
+    }
+
+    function drawCropRectangle() {
+      var context = canvasPreview.getContext('2d');
+      context.clearRect(0, 0, canvasPreview.width, canvasPreview.height);
+      context.drawImage(videoPreview, 0, 0, canvasPreview.width, canvasPreview.height);
+      context.strokeStyle = 'red';
+      context.lineWidth = 2;
+      context.strokeRect(cropData.startX, cropData.startY, cropData.currentX - cropData.startX, cropData.currentY - cropData.startY);
+    }
+
+    function downloadImage() {
+  // Convert the cropped region to a Blob
+  var croppedCanvas = document.createElement('canvas');
+  croppedCanvas.width = cropData.currentX - cropData.startX;
+  croppedCanvas.height = cropData.currentY - cropData.startY;
+  var context = croppedCanvas.getContext('2d');
+  context.drawImage(canvasPreview, cropData.startX, cropData.startY, croppedCanvas.width, croppedCanvas.height, 0, 0, croppedCanvas.width, croppedCanvas.height);
+  croppedCanvas.toBlob(function(blob) {
+    // Create a link element to download the image
+    var link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'webcam_capture.png';
+    link.click();
+  }, 'image/png');
+}
+
+
+    function retakeImage() {
+      // Show the video preview and hide the canvas preview
+      videoPreview.style.display = 'block';
+      canvasPreview.style.display = 'none';
+
+      // Reset crop data and disable crop, download, and retake buttons
+      cropData = {};
+      cropMode = false;
+      cropButton.textContent = 'Crop';
+      cropButton.disabled = true;
+      downloadButton.disabled = true;
+      retakeButton.disabled = true;
+      snapButton.disabled = false;
+    }
+
+    // Start the camera when the DOM is ready
+    document.addEventListener('DOMContentLoaded', function(event) {
+      startCamera();
+    });
+
+    // Stop the camera when the window is unloaded
+    window.addEventListener('unload', function(event) {
+      stopCamera();
+    });
+  </script>
+</body>
+</html>

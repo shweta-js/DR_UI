@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Diabetic Retinopathy Prediction</title>
+</head>
+<body>
+    <h1>Diabetic Retinopathy Prediction</h1>
+    <form method="POST" action="/predict" enctype="multipart/form-data">
+        <input type="file" name="image" accept="image/*">
+        <input type="submit" value="Predict">
+    </form>
+    {% if prediction_text %}
+    <p>Prediction: {{ prediction_text }}</p>
+    {% endif %}
+    {% if button %}
+    {{ button|safe }}
+    {% endif %}
+    {% if image_base64 %}
+    <img src="data:image/png;base64,{{ image_base64 }}" alt="Uploaded Image">
+    {% endif %}
+    {% if classification == 'diabetic_retinopathy' %}
+    <button type="button" onclick="location.href='/check_severity'">Check Severity</button>
+{% endif %}
+
+</body>
+</html>

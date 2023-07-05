@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>Detection and classification</title>
+  <link href='https://fonts.googleapis.com/css?family=Pacifico' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Arimo' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Hind:300' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300' rel='stylesheet' type='text/css'>
+  <style>
+    /* Add some styling for the navbar and button */
+    .navbar {
+      background-color: #333;
+      color: #fff;
+      padding: 10px;
+      pointer-events: none;
+    }
+
+    .footer {
+      background-color: #333;
+      color: #fff;
+      padding: 10px;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      text-align: center;
+    }
+
+    .btn {
+      background-color: #f44336;
+      color: #fff;
+      padding: 10px 20px;
+      border: none;
+      cursor: pointer;
+    }
+
+    .btn:hover {
+      background-color: #d32f2f;
+    }
+
+    .login {
+      text-align: center;
+    }
+
+    .choose_file {
+      /* position: relative; */
+      display: inline-block;
+      background-color: #f44336;
+      color: #fff;
+      padding: 10px 20px;
+      border: none;
+      cursor: pointer;
+      overflow: hidden;
+    }
+
+    .choose_file input[type="file"] {
+      position: absolute;
+      font-size: 100px;
+      opacity: 0;
+      right: 0;
+      top: 0;
+      background-color: blue;
+
+    }
+
+    .form-container {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-evenly;
+      padding: 1rem;
+    }
+
+    .fault {
+      background-color: blue;
+      display: none;
+    }
+
+    .input_things {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-around;
+      /* background-color:black; */
+      width: 50%;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Navbar -->
+  <div class="navbar">
+    <h1>Detection and classification</h1>
+  </div>
+  <!-- Main Content -->
+  <div class="login">
+    <!-- Main Input For Receiving Query to our ML -->
+    <form action="{{ url_for('predict')}}" method="post" enctype="multipart/form-data" class="form-container">
+      <div class="input_things">
+        <label>
+          <span class="choose_file">Choose File</span>
+          <input class="fault" type="file" name="pre_image" accept="image/*" />
+        </label>
+        <label>
+          <span></span>
+          <button type="submit" class="btn btn-primary btn-block btn-large">Predict</button>
+        </label>
+      </div>
+    </form>
+    <form action="{{ url_for('takephoto')}}"  enctype="multipart/form-data" class="form-container">
+      <label>
+        <span></span>
+        <button  type="submit" class="btn btn-primary btn-block btn-large" >take image</button>
+      </label>
+    </form>
+    <br>
+    <br>
+    {% if prediction_text %}
+    {% if image_base64 %}
+    <img src="data:image/png;base64,{{ image_base64 }}" alt="Uploaded Image">
+    {% endif %}
+    <p>{{ prediction_text }}</p>
+    {% endif %}
+    {% if prediction_text == 'diabetic_retinopathy' %}
+    <br>
+    <br>
+    {% if prediction_severity %}
+    {% if image_base64 %}
+    <button id="checkSeverityBtn">Check Severity</button>
+    {% endif %}
+    <p id="predictionSeverity">{{ prediction_severity }}</p>
+    {% endif %}
+    {% endif %}
+  </div>
+</body>
+<script>
+  const checkSeverityBtn = document.getElementById('checkSeverityBtn');
+  const predictionSeverity = document.getElementById('predictionSeverity');
+
+  // Hide the prediction severity element initially
+  predictionSeverity.style.display = 'none';
+
+  // Add click event listener to the button
+  checkSeverityBtn.addEventListener('click', function () {
+    // Toggle the visibility of the prediction severity element
+    predictionSeverity.style.display = (predictionSeverity.style.display === 'none') ? 'block' : 'none';
+  });
+</script>
+
+</html>
