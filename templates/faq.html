@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Troubleshooting</title>
+  <!-- Add your CSS styling and external dependencies here -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/pdfmake.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/vfs_fonts.js"></script>
+  <link href='https://fonts.googleapis.com/css?family=Pacifico' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Arimo' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Hind:300' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300' rel='stylesheet' type='text/css'>
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link rel="stylesheet" href={{ url_for('static', filename='style.css' ) }}>
+</head>
+<body>
+    <div class="container-fluid">
+        <nav class="navbar navbar-expand-md fixed-top main-navbar bg-dark">
+          <button class="navbar-toggler" type="button" style="background-color: #2650a4;" data-toggle="collapse"
+            data-target="#Navbar">
+            <span class="fa fa-bars" style="color: white">
+            </span>
+          </button>
+          <div class="center">
+            <a class="navbar-brand mt-3 mr-5 ml-5 nav-style bg-dark" href="{{ url_for('home') }}">
+              EyeScope
+            </a>
+          </div>
+          <div class="collapse navbar-collapse" id="Navbar">
+            <ul class="nav navbar-nav navbar-right mt-3 ml-auto mr-5">
+              <li class="nav-item active px-2"><a class="nav-link nav-style nav-size" href="{{ url_for('home') }}"> Home
+                </a>
+              </li>
+              <li class="nav-item px-2"><a class="nav-link nav-style nav-size" href="{{ url_for('about') }}"> About</a></li>
+              <li class="nav-item px-2"><a class="nav-link nav-style nav-size" href="{{ url_for('troubleshooting') }}"> Trouble
+                  shooting</a></li>
+              <li class="nav-item px-2"><a class="nav-link nav-style nav-size" href="{{ url_for('home') }}"> FAQ</a></li>
+            </ul>
+          </div>
+        </nav>
+      </div>
+  <!-- Add your page content here -->
+  <div class="faq">
+  <h1>Frequently Asked Questions</h1>
+  <h2>General</h2>
+  <ul>
+    <li>
+      <h3>Q: What is the purpose of this website?</h3>
+      <p>A: This website aims to predict the type of retinal disease based on uploaded images, assisting in early detection and diagnosis.</p>
+    </li>
+    <li>
+      <h3>Q: How accurate are the predictions?</h3>
+      <p>A: The accuracy of predictions depends on various factors, including image quality and the complexity of the retinal condition. Our system strives to provide reliable results, but it's important to consult a healthcare professional for a comprehensive diagnosis.</p>
+    </li>
+    <li>
+      <h3>Q: What types of retinal diseases can be predicted?</h3>
+      <p>A: Our system can predict various retinal diseases, including but not limited to diabetic retinopathy, macular degeneration, and glaucoma.</p>
+    </li>
+    <li>
+      <h3>Q: What image formats are supported?</h3>
+      <p>A: Our website supports commonly used image formats such as JPEG and PNG.</p>
+    </li>
+    <li>
+      <h3>Q: Are there any restrictions on image file size?</h3>
+      <p>A: Yes, there might be restrictions on the maximum file size for image uploads. Please ensure your image file is within the specified size limit.</p>
+    </li>
+  </ul>
+
+  <h2>Usage</h2>
+  <ul>
+    <li>
+      <h3>Q: Can I upload multiple images for prediction?</h3>
+      <p>A: Currently, our system only supports the prediction of one image at a time. You can submit multiple images separately.</p>
+    </li>
+    <li>
+      <h3>Q: How long does it take to receive the prediction result?</h3>
+      <p>A: The prediction time may vary based on server load and image complexity. Typically, it takes a few seconds to process the image and display the prediction result.</p>
+    </li>
+    <li>
+      <h3>Q: Can I trust the predictions from this website instead of consulting a doctor?</h3>
+      <p>A: Our website provides a preliminary prediction based on image analysis. It's important to remember that these predictions should not replace professional medical advice. We recommend consulting an eye care specialist or healthcare professional for an accurate diagnosis.</p>
+    </li>
+    <li>
+      <h3>Q: Is my uploaded image stored or shared with others?</h3>
+      <p>A: We respect your privacy. Uploaded images are used solely for prediction purposes and are not stored or shared with any third parties.</p>
+    </li>
+    <li>
+      <h3>Q: How can I contact support for further assistance or inquiries?</h3>
+      <p>A: You can reach our support team by 888 888 888.</p>
+    </li>
+  </ul>
+</div>
+</body>
+</html>

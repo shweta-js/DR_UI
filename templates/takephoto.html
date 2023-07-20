@@ -7,6 +7,7 @@
       position: relative;
       width: 100%;
       height: auto;
+      left:25%;
     }
 
     #video-preview {
@@ -20,20 +21,53 @@
 
     #controls {
       margin-top: 10px;
+      position: relative;
+      left:40%;
     }
   </style>
+   <!-- Bootstrap CSS -->
+   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+   integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+ <link rel="stylesheet" href={{ url_for('static', filename='style.css' ) }}>
+
 </head>
 <body>
+  <div class="container-fluid">
+    <nav class="navbar navbar-expand-md fixed-top main-navbar bg-dark">
+        <button class="navbar-toggler" type="button" style="background-color: #2650a4;" data-toggle="collapse"
+            data-target="#Navbar">
+            <span class="fa fa-bars" style="color: white">
+            </span>
+        </button>
+        <div class="center">
+            <a class="navbar-brand mt-3 mr-5 ml-5 nav-style bg-dark" href="{{ url_for('home') }}">
+                EyeScope
+            </a>
+        </div>
+        <div class="collapse navbar-collapse" id="Navbar">
+            <ul class="nav navbar-nav navbar-right mt-3 ml-auto mr-5">
+                <li class="nav-item active px-2"><a class="nav-link nav-style nav-size"
+                        href="{{ url_for('home') }}"> Home
+                    </a>
+                </li>
+                <li class="nav-item px-2"><a class="nav-link nav-style nav-size" href="{{ url_for('about') }}"> About</a></li>
+                <li class="nav-item px-2"><a class="nav-link nav-style nav-size" href="{{ url_for('troubleshooting') }}"> Trouble
+                  shooting</a></li>
+              <li class="nav-item px-2"><a class="nav-link nav-style nav-size" href="{{ url_for('faq') }}"> FAQ</a></li>
+            </ul>
+        </div>
+    </nav>
+</div>
   <div id="video-container">
     <video id="video-preview" autoplay></video>
     <canvas id="canvas-preview"></canvas>
   </div>
 
   <div id="controls">
-    <button id="snap-button" onclick="captureImage()">Snap</button>
-    <button id="crop-button" onclick="toggleCropMode()" disabled>Crop</button>
-    <button id="download-button" onclick="downloadImage()" disabled>Download</button>
-    <button id="retake-button" onclick="retakeImage()" disabled>Retake</button>
+    <button class="btn btn-primary nav-style"  id="snap-button" onclick="captureImage()">Snap</button>
+    <button class="btn btn-primary nav-style"  id="crop-button" onclick="toggleCropMode()" disabled>Crop</button>
+    <button class="btn btn-primary nav-style"  id="download-button" onclick="downloadImage()" disabled>Download</button>
+    <button class="btn btn-primary nav-style"  id="retake-button" onclick="retakeImage()" disabled>Retake</button>
   </div>
 
   <script>
@@ -80,8 +114,8 @@
       // Enable the crop button and disable the snap button
       cropButton.disabled = false;
       snapButton.disabled = true;
+      // stopCamera();
     }
-
     function toggleCropMode() {
   cropMode = !cropMode;
   if (cropMode) {
@@ -126,14 +160,35 @@
       drawCropRectangle();
     }
 
+    // function drawCropRectangle() {
+    //   var context = canvasPreview.getContext('2d');
+    //   context.clearRect(0, 0, canvasPreview.width, canvasPreview.height);
+    //   context.drawImage(videoPreview, 0, 0, canvasPreview.width, canvasPreview.height);
+    //   context.strokeStyle = 'red';
+    //   context.lineWidth = 2;
+    //   context.strokeRect(cropData.startX, cropData.startY, cropData.currentX - cropData.startX, cropData.currentY - cropData.startY);
+    // }
     function drawCropRectangle() {
-      var context = canvasPreview.getContext('2d');
-      context.clearRect(0, 0, canvasPreview.width, canvasPreview.height);
-      context.drawImage(videoPreview, 0, 0, canvasPreview.width, canvasPreview.height);
-      context.strokeStyle = 'red';
-      context.lineWidth = 2;
-      context.strokeRect(cropData.startX, cropData.startY, cropData.currentX - cropData.startX, cropData.currentY - cropData.startY);
-    }
+    var context = canvasPreview.getContext('2d');
+
+    // Save the current canvas state
+    context.save();
+
+    // Draw the video frame
+    context.drawImage(videoPreview, 0, 0, canvasPreview.width, canvasPreview.height);
+
+    // Set the desired style for the crop rectangle
+    context.strokeStyle = 'red';
+    context.lineWidth = 2;
+
+    // Draw the crop rectangle while preserving the snap image
+    context.beginPath();
+    context.rect(cropData.startX, cropData.startY, cropData.currentX - cropData.startX, cropData.currentY - cropData.startY);
+    context.stroke();
+
+    // Restore the saved canvas state to preserve the snap image
+    context.restore();
+  }
 
     function downloadImage() {
   // Convert the cropped region to a Blob
@@ -154,6 +209,7 @@
 
     function retakeImage() {
       // Show the video preview and hide the canvas preview
+      startCamera();
       videoPreview.style.display = 'block';
       canvasPreview.style.display = 'none';
 

@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Detection and classification</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/pdfmake.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/vfs_fonts.js"></script>
+  <link href='https://fonts.googleapis.com/css?family=Pacifico' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Arimo' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Hind:300' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300' rel='stylesheet' type='text/css'>
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link rel="stylesheet" href={{ url_for('static', filename='style.css' ) }}>
+</head>
+<body>
+  <div class="container-fluid">
+    <nav class="navbar navbar-expand-md fixed-top main-navbar bg-dark">
+      <button class="navbar-toggler" type="button" style="background-color: #2650a4;" data-toggle="collapse"
+        data-target="#Navbar">
+        <span class="fa fa-bars" style="color: white">
+        </span>
+      </button>
+      <div class="center">
+        <a class="navbar-brand mt-3 mr-5 ml-5 nav-style bg-dark" href="{{ url_for('home') }}">
+          EyeScope
+        </a>
+      </div>
+      <div class="collapse navbar-collapse" id="Navbar">
+        <ul class="nav navbar-nav navbar-right mt-3 ml-auto mr-5">
+          <li class="nav-item active px-2"><a class="nav-link nav-style nav-size" href="{{ url_for('home') }}"> Home
+            </a>
+          </li>
+          <li class="nav-item px-2"><a class="nav-link nav-style nav-size" href="{{ url_for('about') }}"> About</a></li>
+          <li class="nav-item px-2"><a class="nav-link nav-style nav-size" href="{{ url_for('troubleshooting') }}"> Trouble shooting</a></li>
+          <li class="nav-item px-2"><a class="nav-link nav-style nav-size" href="{{ url_for('faq') }}"> FAQ</a></li>
+        </ul>
+      </div>
+    </nav>
+  </div>
+  <div class="container banner-section">
+    <div class="row">
+      <div class="col-6 upload-img">
+        {% if image_base64 %}
+        <img class="upload-img" src="data:image/png;base64,{{ image_base64 }}" alt="Uploaded Image" >
+        {% else %}
+        <img class="upload-img" id="thisimg" 
+          src="{{ url_for('static', filename='inputimages/upload1.jpg') }}" align="middle" />
+        {% endif %}
+        {% if prediction_text %}
+        <p class="result-text" id="prediction_text">{{ prediction_text }}</p>
+        {% endif %}
+        <!-- {% if prediction_text == 'diabetic_retinopathy' %} -->
+        <br>
+        <br>
+        {% if prediction_severity %}
+        {% if image_base64 %}
+        <button class="btn btn-primary nav-style" id="checkSeverityBtn">Check Severity</button>
+        {% else %}
+        <p>.</p>
+        {% endif %}
+        <p class="result-text result-severity" id="predictionSeverity">{{ prediction_severity }}</p>
+        
+        {% endif %}
+        <!-- {% endif %} -->
+      </div>
+      <div class="col-6 text-center text-area">
+        <h4 class="nav-style ml-5">method 1</h4>
+        <br>
+        <h1 class="nav-style ml-5">Upload Image</h1>
+        <br>
+        <form action="{{ url_for('predict')}}" method="post" enctype="multipart/form-data" class="form-container"
+          id="pre_image_form">
+          <label>
+            <span class="btn btn-primary nav-style ml-5">Choose File</span>
+            <input class="choose_file" type="file" name="pre_image" accept="image/*" id="pre_image" onchange="validateImage(event)">
+            <br>
+            <br>
+            <br>
+            <button type="submit" id="predictBtn" class="btn btn-primary nav-style ml-5"
+              style="display: none;">Predict</button>
+          </label>
+          <br>
+        </form>
+        <form action="{{ url_for('send_email') }}" method="POST" id="myForm" onsubmit="validateForm(event)">
+          <label for="name">Name:</label>
+          <input type="text" id="name" name="name"><br><br>
+          <label for="email">Email:</label>
+          <input type="email" id="email" name="email"><br><br>
+          <button class="btn btn-primary nav-style ml-5"  type="button" onclick="validateGeneratePDF()">Download report</button>
+          <button class="btn btn-primary nav-style ml-5" type="submit">Email report</button>
+        </form>
+        <!-- <form action="{{ url_for('handle_report') }}" method="POST" id="myForm">
+          <label for="name">Name:</label>
+          <input type="text" id="name" name="name"><br><br>
+          <label for="email">Email:</label>
+          <input type="email" id="email" name="email"><br><br>
+          <button class="btn btn-primary nav-style ml-5" type="submit" name="action" value="download">Download report</button>
+          <button class="btn btn-primary nav-style ml-5" type="submit" name="action" value="email">Email report</button>
+      </form> -->
+      </div>
+    </div>
+  </div>
+  <div class="container banner-section method2">
+    <div class="row">
+      <div class="col-6">
+        <img style="margin-bottom: 200vh;" src="{{ url_for('static', filename='inputimages/scope.png') }}"align="middle" />
+      </div>
+      <div class="col-6 text-center text-area">
+        <h4 class="nav-style ml-5">method 2</h4>
+        <br>
+        <h1 class="nav-style ml-5">Take Image</h1>
+        <br>
+        <form action="{{ url_for('takephoto')}}" enctype="multipart/form-data" class="form-container">
+          <label>
+            <span></span>
+            <button type="submit" class="btn btn-primary nav-style ml-5">take image</button>
+          </label>
+        </form>
+      </div>
+    </div>
+    <script>
+
+      //     var img = document.getElementById('thisimg');
+      //     img.src = reader.result;
+
+      //     var predictBtn = document.getElementById('predictBtn');
+      //     predictBtn.style.display = 'block';
+      //   };
+      //   reader.readAsDataURL(file);
+      // }
+      function validateImage(event) {
+  const fileInput = event.target;
+  const file = fileInput.files[0];
+
+  const allowedExtensions = ['jpeg', 'jpg', 'png'];
+  const fileExtension = file.name.split('.').pop().toLowerCase();
+
+  if (!allowedExtensions.includes(fileExtension)) {
+    alert('Please select a file in JPEG, JPG, or PNG format.');
+    fileInput.value = ''; // Clear the file input
+  } else {
+    showImage(event); // Proceed with your existing function to show the image
+  }
+}
+//------------validate generate pdf-------------------------------------
+function validateGeneratePDF() {
+  const form = document.getElementById('myForm');
+  const inputs = form.querySelectorAll('input[type="text"], textarea');
+
+  let isFormFilled = true;
+
+  inputs.forEach(input => {
+    if (input.value.trim() === '') {
+      isFormFilled = false;
+      return;
+    }
+  });
+
+  if (isFormFilled) {
+    // Form is filled, proceed with generating the PDF
+    thisgeneratePDF()
+  } else {
+    alert('Please fill out the form before generating the report.');
+  }
+}
+//----------------------------validate email-----------------------------
+function validateForm(event) {
+  const form = event.target;
+  const inputs = form.querySelectorAll('input[type="text"], input[type="email"]');
+
+  let isFormFilled = true;
+
+  inputs.forEach(input => {
+    if (input.value.trim() === '') {
+      isFormFilled = false;
+      return;
+    }
+  });
+
+  if (!isFormFilled) {
+    event.preventDefault(); // Prevent form submission
+    alert('Please fill out the form before submitting.');
+  }
+}
+      let predictionDisplayed = false;
+
+      function showImage(event) {
+        var file = event.target.files[0];
+        var reader = new FileReader();
+        reader.onload = function () {
+        var img = document.getElementById('thisimg');
+        img.src = reader.result;
+        var predictBtn = document.getElementById('predictBtn');
+        predictBtn.style.display = 'block';
+        };
+
+        // Clear the previously selected image
+        var img = document.getElementById('thisimg');
+        img.src = "";
+
+        // Redirect if prediction results are displayed
+        if (predictionDisplayed) {
+          window.location.href = '/proceed';
+        }
+        reader.readAsDataURL(file);
+      }
+      const checkSeverityBtn = document.getElementById('checkSeverityBtn');
+      const predictionSeverity = document.getElementById('predictionSeverity');
+
+      // Hide the prediction severity element initially
+      predictionSeverity.style.display = 'none';
+
+      // Add click event listener to the button
+      checkSeverityBtn.addEventListener('click', function () {
+        // Toggle the visibility of the prediction severity element
+      predictionSeverity.style.display = (predictionSeverity.style.display === 'none') ? 'block' : 'none';
+      });
+      // --------------------------------------------------------
+     
+  function thisgeneratePDF() {
+    
+  // Get the form values
+  var name = document.getElementById("name").value;
+  var email = document.getElementById("email").value;
+  var preImage = document.querySelector(".upload-img img");
+  var result = document.getElementById("prediction_text").innerText;
+  var severity = document.getElementById("predictionSeverity").innerText;
+  // var severity = document.querySelector(".result-severity p");
+
+  // Create the document definition
+  var docDefinition = {
+    content: [
+      { text: "Report", style: "header" },
+      { text: "Name: " + name },
+      { text: "Email: " + email },
+      { text: "Result: " + result },
+      { text: "Severity: "+ severity}
+    ],
+    styles: {
+      header: {
+        fontSize: 18,
+        bold: true,
+        margin: [0, 0, 0, 10],
+      },
+    },
+  };
+
+  // Check if preImage exists
+  if (preImage) {
+    // Get the image source URL
+    var imageSrc = preImage.src;
+
+    // Push the image to the document definition
+    docDefinition.content.push({ image: imageSrc, width: 200, height: 200 });
+  }
+
+  // Generate the PDF
+  pdfMake.createPdf(docDefinition).download("report.pdf");
+}
+
+    </script>
+</body>
+
+</html>

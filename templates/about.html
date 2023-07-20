@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>About</title>
+  <!-- Add your CSS styling and external dependencies here -->
+  <meta charset="UTF-8">
+  <title>Detection and classification</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/pdfmake.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/vfs_fonts.js"></script>
+  <link href='https://fonts.googleapis.com/css?family=Pacifico' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Arimo' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Hind:300' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300' rel='stylesheet' type='text/css'>
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link rel="stylesheet" href={{ url_for('static', filename='style.css' ) }}>
+</head>
+<body>
+  <!-- Add your page content here -->
+  <div class="container-fluid">
+    <nav class="navbar navbar-expand-md fixed-top main-navbar bg-dark">
+      <button class="navbar-toggler" type="button" style="background-color: #2650a4;" data-toggle="collapse"
+        data-target="#Navbar">
+        <span class="fa fa-bars" style="color: white">
+        </span>
+      </button>
+      <div class="center">
+        <a class="navbar-brand mt-3 mr-5 ml-5 nav-style bg-dark" href="{{ url_for('home') }}">
+          EyeScope
+        </a>
+      </div>
+      <div class="collapse navbar-collapse" id="Navbar">
+        <ul class="nav navbar-nav navbar-right mt-3 ml-auto mr-5">
+          <li class="nav-item active px-2"><a class="nav-link nav-style nav-size" href="{{ url_for('home') }}"> Home
+            </a>
+          </li>
+          <li class="nav-item px-2"><a class="nav-link nav-style nav-size" href="{{ url_for('about') }}"> About</a></li>
+          <li class="nav-item px-2"><a class="nav-link nav-style nav-size" href="{{ url_for('home') }}"> Trouble
+              shooting</a></li>
+          <li class="nav-item px-2"><a class="nav-link nav-style nav-size" href="{{ url_for('faq') }}"> FAQ</a></li>
+        </ul>
+      </div>
+    </nav>
+  </div>
+  <h1>About</h1>
+  <div class="container banner-section">
+    <div class="row">
+      <div class="col-6">
+        <img style="margin-top:6rem; width:20rem;margin-left:3rem" src="{{ url_for('static', filename='inputimages/save_eye.png') }}" align="middle" />
+      </div>
+      <div class="col-6 text-center text-area about-text">
+  <h2>Technical Excellence Meets Eye Health Welfare</h2>
+  <p>Our website brings together the realms of technology and eye health welfare to offer a powerful tool for the early detection and prediction of retinal diseases.</p>
+   <p>The primary objective of this website is to provide an accessible and user-friendly platform that empowers individuals to gain insights into their retinal health.</p>
+      </div>
+    </div>
+   <div class="about-extra">
+    <h2>Promoting Early Detection and Diagnosis</h2>
+    <p>Early detection of retinal diseases plays a crucial role in their effective management and treatment. With our advanced prediction system, we aim to contribute to the early identification of conditions such as diabetic retinopathy, cataract, and glaucoma.</p>
+    <p>By enabling users to upload or capture retinal images, our system leverages state-of-the-art machine learning models to analyze these images and predict potential retinal diseases. We strive to provide users with informative predictions that serve as a valuable tool for initiating early conversations with healthcare professionals and seeking appropriate medical care.</p>
+  
+<!--     
+    <h2>Contact Us</h2>
+    <p>If you have any questions, feedback, or concerns regarding our retinal disease prediction website, please don't hesitate to reach out to our team. We value your input and are committed to continuously improving our services to enhance the well-being of our users.</p>
+    <p>Contact our support team at [provide contact information such as email or phone number] for any inquiries or assistance you may require.</p>
+      -->
+   </div>
+</body>
+</html>

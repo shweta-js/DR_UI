@@ -8,94 +8,20 @@
   <link href='https://fonts.googleapis.com/css?family=Arimo' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Hind:300' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300' rel='stylesheet' type='text/css'>
-  <style>
-    /* Add some styling for the navbar and button */
-    .navbar {
-      background-color: #333;
-      color: #fff;
-      padding: 10px;
-      pointer-events: none;
-    }
 
-    .footer {
-      background-color: #333;
-      color: #fff;
-      padding: 10px;
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      text-align: center;
-    }
+  
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href={{ url_for('static', filename='style.css' ) }}>
+    
 
-    .btn {
-      background-color: #f44336;
-      color: #fff;
-      padding: 10px 20px;
-      border: none;
-      cursor: pointer;
-    }
-
-    .btn:hover {
-      background-color: #d32f2f;
-    }
-
-    .login {
-      text-align: center;
-    }
-
-    .choose_file {
-      /* position: relative; */
-      display: inline-block;
-      background-color: #f44336;
-      color: #fff;
-      padding: 10px 20px;
-      border: none;
-      cursor: pointer;
-      overflow: hidden;
-    }
-
-    .choose_file input[type="file"] {
-      position: absolute;
-      font-size: 100px;
-      opacity: 0;
-      right: 0;
-      top: 0;
-      background-color: blue;
-
-    }
-
-    .form-container {
-      display: flex;
-      flex-direction: row;
-      justify-content: space-evenly;
-      padding: 1rem;
-    }
-
-    .fault {
-      background-color: blue;
-      display: none;
-    }
-
-    .input_things {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      justify-content: space-around;
-      /* background-color:black; */
-      width: 50%;
-    }
-  </style>
 </head>
 
 <body>
-  <!-- Navbar -->
-  <div class="navbar">
-    <h1>Detection and classification</h1>
-  </div>
-  <!-- Main Content -->
+<!-- 
   <div class="login">
-    <!-- Main Input For Receiving Query to our ML -->
     <form action="{{ url_for('predict')}}" method="post" enctype="multipart/form-data" class="form-container">
       <div class="input_things">
         <label>
@@ -134,6 +60,82 @@
     {% endif %}
     {% endif %}
   </div>
+ -->
+
+
+  <div class="container-fluid">
+    <nav class="navbar navbar-expand-md fixed-top main-navbar bg-dark">
+        <button class="navbar-toggler" type="button" style="background-color: #2650a4;" data-toggle="collapse"
+            data-target="#Navbar">
+            <span class="fa fa-bars" style="color: white">
+            </span>
+        </button>
+        <div class="center">
+            <a class="navbar-brand mt-3 mr-5 ml-5 nav-style bg-dark " href="{{ url_for('predict') }}">
+                EyeScope
+            </a>
+        </div>
+        <div class="collapse navbar-collapse" id="Navbar">
+            <ul class="nav navbar-nav navbar-right mt-3 ml-auto mr-5">
+                <li class="nav-item active px-2"><a class="nav-link nav-style nav-size"
+                        href="{{ url_for('home') }}"> Home
+                    </a>
+                </li>
+                <li class="nav-item px-2"><a class="nav-link nav-style nav-size" href="{{ url_for('about') }}"> About</a></li>
+
+            </ul>
+        </div>
+      
+    </nav>
+</div>
+<div class="container banner-section">
+    <div class="row">
+        <div class="col-6">
+            <img style="margin-bottom: 25vh; height:300px;margin-top:3rem;"  src="{{ url_for('static', filename='inputimages/eyecondition.png') }}" 
+                align="middle" />
+        </div>
+        <div class="col-6 text-center text-area">
+            <h4 class="nav-style ml-5">Easy and Affordable way to</h4>
+            <br>
+            <h1 class="nav-style ml-5">Detect the condition of your eye</h1>
+            <br>
+            <a href="{{ url_for('proceed') }}">
+                <button type="button" class="btn btn-primary nav-style ml-5">Proceed</button>
+            </a>
+        </div>
+    </div>
+
+    <div class="container ">
+      <div class="row">
+
+          <div class="col-6 text-center text-area">
+              <h4 style="font-size: 40px;" class="nav-style ml-5">Quickly check your eye in an effortless manner</h4>
+              <br>
+              <h1  style="font-size: 30px;" class="nav-style ml-5">Just upload the image of your eye</h1>
+              <br>
+  
+          </div>
+          <div class="col-6">
+            <img style="height: 300px;width: 300px;margin-left: 10vh;margin-bottom: 25vh;" src="https://static.vecteezy.com/system/resources/previews/014/720/677/non_2x/eye-scan-id-line-icon-vision-scanning-technology-for-security-access-pictogram-iris-recognition-for-biometric-identification-sign-retina-scanner-editable-stroke-isolated-illustration-vector.jpg" alt="eye scan image"
+                align="middle" />
+        </div>
+      </div>
+      </div>
+
+      <div class="container" >
+        <div class="row">
+            <div class="col-6">
+              <img style=" height:300px;margin-top:0;" src="{{ url_for('static', filename='inputimages/report.png') }}" alt="result"
+              align="middle" />
+            </div>
+            <div class="col-6 text-center text-area">
+                <h4  style="font-size: 40px;" class="nav-style ml-5">Get Your Results instantly</h4>
+                <br>
+                <h1 style="font-size: 30px;" class="nav-style ml-5">At your fingertips</h1>
+                <br>
+            </div>
+        </div>
+</div>
 </body>
 <script>
   

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Troubleshooting</title>
+  <!-- Add your CSS styling and external dependencies here -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/pdfmake.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/vfs_fonts.js"></script>
+  <link href='https://fonts.googleapis.com/css?family=Pacifico' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Arimo' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Hind:300' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300' rel='stylesheet' type='text/css'>
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link rel="stylesheet" href={{ url_for('static', filename='style.css' ) }}>
+</head>
+<body>
+    <div class="container-fluid">
+        <nav class="navbar navbar-expand-md fixed-top main-navbar bg-dark">
+          <button class="navbar-toggler" type="button" style="background-color: #2650a4;" data-toggle="collapse"
+            data-target="#Navbar">
+            <span class="fa fa-bars" style="color: white">
+            </span>
+          </button>
+          <div class="center">
+            <a class="navbar-brand mt-3 mr-5 ml-5 nav-style bg-dark" href="{{ url_for('home') }}">
+              EyeScope
+            </a>
+          </div>
+          <div class="collapse navbar-collapse" id="Navbar">
+            <ul class="nav navbar-nav navbar-right mt-3 ml-auto mr-5">
+              <li class="nav-item active px-2"><a class="nav-link nav-style nav-size" href="{{ url_for('home') }}"> Home
+                </a>
+              </li>
+              <li class="nav-item px-2"><a class="nav-link nav-style nav-size" href="{{ url_for('about') }}"> About</a></li>
+              <li class="nav-item px-2"><a class="nav-link nav-style nav-size" href="{{ url_for('troubleshooting') }}"> Trouble
+                  shooting</a></li>
+              <li class="nav-item px-2"><a class="nav-link nav-style nav-size" href="{{ url_for('faq') }}"> FAQ</a></li>
+            </ul>
+          </div>
+        </nav>
+      </div>
+  <!-- Add your page content here -->
+ <div class="troubleshooting"> 
+
+    <h2>Common Issues and Solutions</h2>
+    <br/>
+    <br/>
+    <ul>
+      <li>
+        <h3>Issue: Poor Internet Connection</h3>
+        <p>Solution: Ensure that you have a stable internet connection. Try refreshing the page or restarting your router.</p>
+      </li>
+      <li>
+        <h3>Issue: Unsupported Image Format</h3>
+        <p>Solution: Verify that you are uploading or capturing images in supported formats (e.g., JPEG, PNG).</p>
+      </li>
+      <li>
+        <h3>Issue: Blurry or Low-Resolution Images</h3>
+        <p>Solution: Use clear and high-quality images for better prediction accuracy.</p>
+      </li>
+      <li>
+        <h3>Issue: File Size Limitations</h3>
+        <p>Solution: Check the maximum file size allowed for image uploads. Compress or resize images if they exceed the limit.</p>
+      </li>
+      <li>
+        <h3>Issue: Webcam Access</h3>
+        <p>Solution: Grant necessary permissions to access the webcam. Check your browser settings and enable webcam access if required.</p>
+      </li>
+      <li>
+        <h3>Issue: Browser Compatibility</h3>
+        <p>Solution: Ensure that you are using a compatible web browser. Try accessing the website using a different browser if issues persist.</p>
+      </li>
+      <li>
+        <h3>Issue: Clear Browser Cache</h3>
+        <p>Solution: Clear your browser cache and cookies, which can sometimes cause conflicts or interfere with website functionality.</p>
+      </li>
+      <li>
+        <h3>Issue: Unexpected Behavior or Errors</h3>
+        <p>Solution: Refresh the page to resolve temporary issues or glitches. Contact our support team if problems persist.</p>
+      </li>
+    </ul>
+    <p>If you continue to experience difficulties or have any other questions, please contact our support team for further assistance.</p>
+ </div>
+</body>
+</html>
