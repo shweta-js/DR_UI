@@ -19,8 +19,8 @@ flask_app = Flask(__name__)
 flask_app.secret_key = 'your_secret_key'
 
 # Load the model
-model = load_learner("U:\downloads\ML-MODEL-DEPLOYMENT-USING-FLASK-main\ML-MODEL-DEPLOYMENT-USING-FLASK-main\eyedisease.pkl", "eyedisease.pkl")
-severity_model = load_learner("U:\downloads\ML-MODEL-DEPLOYMENT-USING-FLASK-main\ML-MODEL-DEPLOYMENT-USING-FLASK-main\dr.pkl", "dr.pkl")
+model = load_learner(r"P:\U\downloads\ML-MODEL-DEPLOYMENT-USING-FLASK-main\ML-MODEL-DEPLOYMENT-USING-FLASK-main\eyedisease.pkl", "eyedisease.pkl")
+severity_model = load_learner(r"P:\U\downloads\ML-MODEL-DEPLOYMENT-USING-FLASK-main\ML-MODEL-DEPLOYMENT-USING-FLASK-main\dr.pkl", "dr.pkl")
 
 captured_image = None
 
@@ -44,6 +44,7 @@ def faq():
 def predict():
     global prediction_value
     global g_image
+    global prediction_severity
     file = request.files["pre_image"]  # Get the uploaded file
     image = PILImage.create(file)  # Create a fastai PILImage from the file
     
@@ -100,20 +101,86 @@ def handle_report():
         return "Invalid action"
 
 
+# @flask_app.route("/send_email", methods=["POST"])
+# def send_email():
+#     email = request.form.get("email")
+#     name = request.form.get("name")
+#     result = request.form.get("result")
+
+#     # Code to send email using Flask-Mail
+#     if request.method == 'POST':
+#         msg = Message("Report of your recent eye examination", 
+#                     sender=flask_app.config['MAIL_USERNAME'], 
+#                     recipients=[email])
+#         msg.body = f"Name: {name}\nResult: {prediction_value}"
+#         msg.attach("image.png", "image/png", base64.b64decode(g_image))
+#         mail.send(msg)
+#         return "Email sent successfully"
+
+# mail = Mail(flask_app)
+
+
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
+from reportlab.lib.utils import ImageReader
+
 @flask_app.route("/send_email", methods=["POST"])
 def send_email():
     email = request.form.get("email")
     name = request.form.get("name")
-    result = request.form.get("result")
+    result = prediction_value
+
+    if(prediction_value=="diabetic_retinopathy"):
+        severity =prediction_severity
+
+    image_base64 = g_image
+
+    # Decode the image from base64
+    image_data = base64.b64decode(image_base64)
+
+    # Open the image using PIL
+    image = Image.open(io.BytesIO(image_data))
+
+    # Generate the PDF with image, result, name, date, and time
+    pdf_buffer = io.BytesIO()
+    c = canvas.Canvas(pdf_buffer, pagesize=letter)
+
+    # Inserting the image into the PDF
+    img_width, img_height = 200, 200  # Adjust the size as needed
+    image_reader = ImageReader(image)
+    headline = "Eye Examination Report"
+# Adding the headline and other information
+    c.setFont("Helvetica-Bold", 14)
+    c.drawString(100, 750, headline)
+    c.drawImage(image_reader, x=100, y=letter[1] - 100 - img_height, width=img_width, height=img_height)
+
+    # Adding the other information
+    c.drawString(100, 450, f"Name: {name}")
+    c.drawString(100, 430, f"Result: {result}")
+    if(prediction_value=="diabetic_retinopathy"):
+        c.drawString(100, 410, f"Severity: {severity}")
+
+    c.save()
+
+    # Get the PDF as bytes
+    pdf_buffer.seek(0)
+    pdf_data = pdf_buffer.getvalue()
 
     # Code to send email using Flask-Mail
     if request.method == 'POST':
-        msg = Message("Report of your recent eye examination", 
-                    sender=flask_app.config['MAIL_USERNAME'], 
-                    recipients=[email])
-        msg.body = f"Name: {name}\nResult: {prediction_value}"
-        msg.attach("image.png", "image/png", base64.b64decode(g_image))
+        msg = Message("Report of your recent eye examination",
+                      sender=flask_app.config['MAIL_USERNAME'],
+                      recipients=[email])
+
+        # Set the body of the email
+        msg.body = f"Dear {name},\n\nPlease find attached the report of your recent eye examination.\n\nBest regards,\nYour Eye Clinic"
+
+        # Attach the PDF
+        msg.attach("report.pdf", "application/pdf", pdf_data)
+
+        # Send the email
         mail.send(msg)
+
         return "Email sent successfully"
 
 @flask_app.route("/download_report", methods=["GET"])

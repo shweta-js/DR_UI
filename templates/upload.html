@@ -54,7 +54,7 @@
         <!-- {% if prediction_text == 'diabetic_retinopathy' %} -->
         <br>
         <br>
-        {% if prediction_severity %}
+        {% if prediction_text=="diabetic_retinopathy" %}
         {% if image_base64 %}
         <button class="btn btn-primary nav-style" id="checkSeverityBtn">Check Severity</button>
         {% else %}
@@ -225,11 +225,17 @@ function validateForm(event) {
   var name = document.getElementById("name").value;
   var email = document.getElementById("email").value;
   var preImage = document.querySelector(".upload-img img");
+  // var result= prediction_text?prediction_text:" ";
+  // var severity=prediction_severity?prediction_severity:" ";
   var result = document.getElementById("prediction_text").innerText;
+  if(result=="diabetic_retinopathy"){
   var severity = document.getElementById("predictionSeverity").innerText;
-  // var severity = document.querySelector(".result-severity p");
+
+  }
+  // var severity = document.querySelector(".result-severity");
 
   // Create the document definition
+ if(result=="diabetic_retinopathy"){
   var docDefinition = {
     content: [
       { text: "Report", style: "header" },
@@ -246,7 +252,25 @@ function validateForm(event) {
       },
     },
   };
-
+ }
+else{
+  var docDefinition = {
+    content: [
+      { text: "Report", style: "header" },
+      { text: "Name: " + name },
+      { text: "Email: " + email },
+      { text: "Result: " + result },
+      // { text: "Severity: "+ severity}
+    ],
+    styles: {
+      header: {
+        fontSize: 18,
+        bold: true,
+        margin: [0, 0, 0, 10],
+      },
+    },
+  };
+}
   // Check if preImage exists
   if (preImage) {
     // Get the image source URL
